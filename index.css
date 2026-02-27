@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --orange: #F97316;
+  --orange-dim: #FFF0E6;
+  --orange-mid: #FDBA8C;
+  --navy: #1C1C1E;
+  --mid: #6B6B6B;
+  --light: #ADADAD;
+  --bg: #FAFAF9;
+  --surface: #FFFFFF;
+  --border: #F0EDEA;
+  --teal: #0D9488;
+  --teal-bg: #F0FEFA;
+  --green: #16A34A;
+  --green-bg: #F0FDF4;
+}
+
+.dark {
+  --orange: #FB923C;
+  --orange-dim: #431407;
+  --orange-mid: #9A3412;
+  --navy: #F9FAFB;
+  --mid: #9CA3AF;
+  --light: #6B7280;
+  --bg: #18181B;
+  --surface: #27272A;
+  --border: #3F3F46;
+  --teal: #2DD4BF;
+  --teal-bg: #134E4A;
+  --green: #4ADE80;
+  --green-bg: #14532D;
+}
+
+@layer base {
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--bg);
+    color: var(--navy);
+    overscroll-behavior-y: none;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Instrument Serif', serif;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar for clean UI but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .font-serif {
+    font-family: 'Instrument Serif', serif;
+  }
+  
+  .font-sans {
+    font-family: 'DM Sans', sans-serif;
+  }
+}
