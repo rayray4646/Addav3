@@ -5,7 +5,8 @@ import { Hangout, Profile, Participant, ACTIVITY_EMOJIS } from '../types';
 import Chat from '../components/Chat';
 import Button from '../components/Button';
 import { useAuth } from '../contexts/auth-context';
-import { ArrowLeft, Clock, MapPin, Users, Calendar, Check, X, ShieldAlert, Lock, MessageCircle, Trash2 } from 'lucide-react';
+import { ArrowLeft, Clock, MapPin, Users, Check, X, ShieldAlert, Lock, MessageCircle, Trash2, Flag } from 'lucide-react';
+import ReportModal from '../components/ReportModal';
 import { format } from 'date-fns';
 
 const HangoutDetail = () => {
@@ -18,6 +19,7 @@ const HangoutDetail = () => {
   const [joining, setJoining] = useState(false);
   const [view, setView] = useState<'chat' | 'info'>('info');
   const [isEndingSoon, setIsEndingSoon] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   useEffect(() => {
     if (!id || !user) return;
@@ -155,6 +157,7 @@ const HangoutDetail = () => {
   const isFull = approvedParticipants.length >= hangout.max_participants;
 
   return (
+    <>
     <div className="flex flex-col h-full bg-bg w-full overflow-hidden font-sans">
       {/* Header */}
       <div className="bg-surface border-b border-border p-4 flex items-center justify-between z-10 shadow-sm shrink-0">
@@ -173,6 +176,15 @@ const HangoutDetail = () => {
         </div>
 
         <div className="flex gap-3">
+            {!isHost && isMember && (
+                <button
+                    onClick={() => setShowReport(true)}
+                    className="p-2 text-light hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
+                    title="Report this hangout"
+                >
+                    <Flag size={18} />
+                </button>
+            )}
             {isAdmin && (
                 <button 
                     onClick={handleDelete}
@@ -306,10 +318,10 @@ const HangoutDetail = () => {
                                             <div className="w-full h-full flex items-center justify-center text-mid font-bold">{p.user.name.charAt(0)}</div>
                                         )}
                                     </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-navy">{p.user.name}</p>
+                                    <button onClick={() => navigate(`/user/${p.user_id}`)} className="text-left hover:opacity-80 transition-opacity">
+                                        <p className="text-sm font-bold text-navy hover:text-orange transition-colors">{p.user.name}</p>
                                         <p className="text-[10px] text-mid uppercase tracking-wider">{p.user.occupation || 'Student'}</p>
-                                    </div>
+                                    </button>
                                 </div>
                                 <div className="flex gap-2">
                                     <button 
@@ -342,7 +354,7 @@ const HangoutDetail = () => {
                 
                 <div className="grid grid-cols-4 gap-4">
                     {approvedParticipants.map(p => (
-                        <div key={p.id} className="flex flex-col items-center group">
+                        <button key={p.id} onClick={() => navigate(`/user/${p.user_id}`)} className="flex flex-col items-center group">
                             <div className="w-14 h-14 rounded-full bg-surface border-2 border-border p-0.5 mb-2 transition-transform group-hover:scale-105 group-hover:border-orange">
                                 <div className="w-full h-full rounded-full overflow-hidden bg-bg">
                                     {p.user.avatar_url ? (
@@ -353,7 +365,7 @@ const HangoutDetail = () => {
                                 </div>
                             </div>
                             <span className="text-xs font-medium text-navy truncate w-full text-center">{p.user.name.split(' ')[0]}</span>
-                        </div>
+                        </button>
                     ))}
                     
                     {/* Empty Slots */}
@@ -391,6 +403,14 @@ const HangoutDetail = () => {
         </div>
       </div>
     </div>
+      {showReport && hangout && (
+        <ReportModal
+          targetHangoutId={hangout.id}
+          targetHangoutTitle={hangout.title}
+          onClose={() => setShowReport(false)}
+        />
+      )}
+    </>
   );
 };
 
